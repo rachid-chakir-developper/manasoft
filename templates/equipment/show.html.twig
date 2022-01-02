@@ -1,10 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Equipment{% endblock %}
+{% block title %}Equipement : {{ equipment.name}}{% endblock %}
 
 {% block body %}
-    <h1>Equipment</h1>
-
+    <h3>Equipement: <em>{{ equipment.name}} | {{ equipment.number }}</em></h3>
     <table class="table">
         <tbody>
             <tr>
@@ -12,35 +11,39 @@
                 <td>{{ equipment.id }}</td>
             </tr>
             <tr>
-                <th>Name</th>
+                <th>Nom</th>
                 <td>{{ equipment.name }}</td>
             </tr>
             <tr>
-                <th>Category</th>
+                <th>Catégorie</th>
                 <td>{{ equipment.category }}</td>
             </tr>
             <tr>
-                <th>Number</th>
+                <th>Numéro</th>
                 <td>{{ equipment.number }}</td>
             </tr>
             <tr>
-                <th>Description</th>
+                <th>Déscription</th>
                 <td>{{ equipment.description }}</td>
             </tr>
             <tr>
-                <th>CreatedAt</th>
-                <td>{{ equipment.createdAt ? equipment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <th>Date d'ajout</th>
+                <td>{{ equipment.createdAt ? equipment.createdAt|date('d/m/Y H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>UpdatedAt</th>
-                <td>{{ equipment.updatedAt ? equipment.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <th>Date de modification</th>
+                <td>{{ equipment.updatedAt ? equipment.updatedAt|date('d/m/Y H:i:s') : '' }}</td>
             </tr>
         </tbody>
     </table>
-
-    <a href="{{ path('equipment_index') }}">back to list</a>
-
-    <a href="{{ path('equipment_edit', {'id': equipment.id}) }}">edit</a>
+    <div class="row">
+        <div class="col">
+            <a href="{{ path('equipment_index') }}">retour à la liste</a>
+        </div>
+        <div class="col d-flex justify-content-end">
+            <a href="{{ path('equipment_edit', {'id': equipment.id}) }}" class="btn btn-success">modifier</a>
+        </div>
+    </div>
 
     {{ include('equipment/_delete_form.html.twig') }}
 {% endblock %}

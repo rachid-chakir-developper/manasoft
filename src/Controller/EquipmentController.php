@@ -19,25 +19,31 @@ class EquipmentController extends AbstractController
     /**
      * @Route("/", name="equipment_index", methods={"GET"})
      */
-    public function index(EquipmentRepository $equipmentRepository): Response
+    public function getEquipments(EquipmentRepository $equipmentRepository): Response
     {
         return $this->render('equipment/index.html.twig', [
-            'equipment' => $equipmentRepository->findAll(),
+            'equipment' => $equipmentRepository->findBy([],['createdAt' => 'desc']),
         ]);
     }
 
     /**
-     * @Route("/new", name="equipment_new", methods={"GET", "POST"})
+     * @Route("/add", name="equipment_add", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function postEquipment(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $session = $this->get('session');
         $equipment = new Equipment();
         $form = $this->createForm(EquipmentType::class, $equipment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($equipment);
-            $entityManager->flush();
+            try{
+                $entityManager->persist($equipment);
+                $entityManager->flush();
+            }
+            catch (\Exception $ex) {
+                $session->getFlashBag()->add('danger',$ex->getMessage());
+            }
 
             return $this->redirectToRoute('equipment_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -51,7 +57,7 @@ class EquipmentController extends AbstractController
     /**
      * @Route("/{id}", name="equipment_show", methods={"GET"})
      */
-    public function show(Equipment $equipment): Response
+    public function getEquipment(Equipment $equipment): Response
     {
         return $this->render('equipment/show.html.twig', [
             'equipment' => $equipment,
@@ -61,13 +67,19 @@ class EquipmentController extends AbstractController
     /**
      * @Route("/{id}/edit", name="equipment_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Equipment $equipment, EntityManagerInterface $entityManager): Response
+    public function putEquipment(Request $request, Equipment $equipment, EntityManagerInterface $entityManager): Response
     {
+        $session = $this->get('session');
         $form = $this->createForm(EquipmentType::class, $equipment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            try{
+                $entityManager->flush();
+            }
+            catch (\Exception $ex) {
+                $session->getFlashBag()->add('danger',$ex->getMessage());
+            }
 
             return $this->redirectToRoute('equipment_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -81,11 +93,17 @@ class EquipmentController extends AbstractController
     /**
      * @Route("/{id}", name="equipment_delete", methods={"POST"})
      */
-    public function delete(Request $request, Equipment $equipment, EntityManagerInterface $entityManager): Response
+    public function deleteEquipment(Request $request, Equipment $equipment, EntityManagerInterface $entityManager): Response
     {
+        $session = $this->get('session');
         if ($this->isCsrfTokenValid('delete'.$equipment->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($equipment);
-            $entityManager->flush();
+            try{
+                $entityManager->remove($equipment);
+                $entityManager->flush();
+            }
+            catch (\Exception $ex) {
+                $session->getFlashBag()->add('danger',$ex->getMessage());
+            }
         }
 
         return $this->redirectToRoute('equipment_index', [], Response::HTTP_SEE_OTHER);

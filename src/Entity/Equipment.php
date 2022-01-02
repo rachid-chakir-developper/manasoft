@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=EquipmentRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Equipment
 {
@@ -33,9 +34,9 @@ class Equipment
     private $number;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", options={"default" : ""})
      */
-    private $description;
+    private $description = '';
 
     /**
      * @ORM\Column(type="datetime_immutable")
@@ -46,6 +47,11 @@ class Equipment
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $updatedAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DatetimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -95,6 +101,10 @@ class Equipment
 
     public function setDescription(string $description): self
     {
+        if (empty($description) || null == $description) {
+            $description = '';
+        }
+        
         $this->description = $description;
 
         return $this;
@@ -122,5 +132,13 @@ class Equipment
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    /**
+    * @ORM\PreUpdate
+    */
+    public function updateDate()
+    {
+        $this->setUpdatedAt(new \DatetimeImmutable());
     }
 }

@@ -12,10 +12,22 @@ class EquipmentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('category')
-            ->add('number')
-            ->add('description')
+            ->add('name', \Symfony\Component\Form\Extension\Core\Type\TextType::class, [
+                'label' => 'Nom',
+                'required' => false,
+            ])
+            ->add('category', \Symfony\Component\Form\Extension\Core\Type\TextType::class, [
+                'label' => 'Catégorie',
+                'required' => false,
+            ])
+            ->add('number', \Symfony\Component\Form\Extension\Core\Type\TextType::class, [
+                'label' => 'Numéro',
+            ])
+            ->add('description', \Symfony\Component\Form\Extension\Core\Type\TextareaType::class, [
+                'label' => 'Déscription',
+                'empty_data'    => '',
+                'required' => false,
+            ])
         ;
     }
 

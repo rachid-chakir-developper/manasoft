@@ -3,43 +3,68 @@
 {% block title %}Equipment index{% endblock %}
 
 {% block body %}
-    <h1>Equipment index</h1>
-
-    <table class="table">
+    <h3>Les équipements:</h3>
+    <div class="row">
+        <div class="col d-flex justify-content-end">
+            <a href="{{ path('equipment_add') }}" class="btn btn-primary">
+                Ajouter un équipement
+            </a>
+        </div>
+    </div>
+    {# On affiche les messages flash #}
+    {% for key, messages in app.session.flashbag.all() %}
+        {% for message in messages %}
+          <p class="alert alert-{{ key }} mt-2">
+            {{ message }}
+          </p>
+        {% endfor %}
+    {% endfor %}
+    <table class="table striped">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Number</th>
-                <th>Description</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>actions</th>
+                <th scope="col">Id</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Catégorie</th>
+                <th scope="col">Numéro</th>
+                <th scope="col">Déscription</th>
+                <th scope="col">Date d'ajout</th>
+                <th scope="col">Date de modif.</th>
+                <th scope="col">#</th>
             </tr>
         </thead>
         <tbody>
         {% for equipment in equipment %}
             <tr>
-                <td>{{ equipment.id }}</td>
+                <td scope="row">{{ equipment.id }}</td>
                 <td>{{ equipment.name }}</td>
                 <td>{{ equipment.category }}</td>
                 <td>{{ equipment.number }}</td>
                 <td>{{ equipment.description }}</td>
-                <td>{{ equipment.createdAt ? equipment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ equipment.updatedAt ? equipment.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ equipment.createdAt ? equipment.createdAt|date('d/m/Y H:i:s') : '' }}</td>
+                <td>{{ equipment.updatedAt ? equipment.updatedAt|date('d/m/Y H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('equipment_show', {'id': equipment.id}) }}">show</a>
-                    <a href="{{ path('equipment_edit', {'id': equipment.id}) }}">edit</a>
+                    <a href="{{ path('equipment_show', {'id': equipment.id}) }}" class="btn btn-outline-secondary btn-sm">
+                        voir
+                    </a>
+                    <a href="{{ path('equipment_edit', {'id': equipment.id}) }}" class="btn btn-outline-success btn-sm">
+                        modifier
+                    </a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="8">no records found</td>
+                <td colspan="8">
+                    <p class="alert alert-warning" role="alert">aucun équipement trouvé.</p>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('equipment_new') }}">Create new</a>
+    <div class="row">
+        <div class="col">
+            <a href="{{ path('equipment_add') }}" class="btn btn-primary">
+                Ajouter un équipement
+            </a>
+        </div>
+    </div>
 {% endblock %}

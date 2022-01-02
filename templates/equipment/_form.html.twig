@@ -1,4 +1,15 @@
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
 {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <div class="row mt-3">
+        <div class="col">
+            <a href="{{ path('equipment_index') }}">retour à la liste</a>
+        </div>
+        <div class="col d-flex justify-content-end">
+            <button class="btn btn-success">
+                {{ button_label|default('Ajouter') }}
+            </button>
+        </div>
+    </div>
 {{ form_end(form) }}
